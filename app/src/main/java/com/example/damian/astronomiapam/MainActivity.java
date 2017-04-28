@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import static android.R.attr.action;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_D;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_SZ;
 
@@ -23,6 +25,7 @@ public class MainActivity extends FragmentActivity {
 
     public double dlugosc = 0;
     public double szerokosc = 0;
+    int cycles = 0;
 
     TextView Time;
     TextView longtitude;
@@ -68,6 +71,7 @@ public class MainActivity extends FragmentActivity {
                             @Override
                             public void run() {
                                 Time.setText("Czas: " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) );
+                                cycles++;
                             }
                         });
                     }
@@ -75,7 +79,6 @@ public class MainActivity extends FragmentActivity {
                 }
             }
         };
-
         t.start();
 
         // Instantiate a ViewPager and a PagerAdapter.
