@@ -1,5 +1,6 @@
 package com.example.damian.astronomiapam;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -9,7 +10,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_D;
+import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_SZ;
+
 public class MainActivity extends FragmentActivity {
+
 
     double dlugosc = 0;
     double szerokosc = 0;
@@ -33,6 +38,9 @@ public class MainActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent SettingsIntent = getIntent();
+        dlugosc = Double.parseDouble(SettingsIntent.getStringExtra(EXTRA_MESSAGE_D));
+        szerokosc = Double.parseDouble(SettingsIntent.getStringExtra(EXTRA_MESSAGE_SZ));
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);

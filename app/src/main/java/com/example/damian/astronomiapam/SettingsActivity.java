@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.EditText;
 
 public class SettingsActivity extends AppCompatActivity {
-    private static final String EXTRA_MESSAGE_D = "com.example.damian.astronomiapam.MessegeDlugosc";
-    private static final String EXTRA_MESSAGE_SZ = "com.example.damian.astronomiapam.MessegeSzerokosc";
+    static final String EXTRA_MESSAGE_D = "com.example.damian.astronomiapam.MessegeDlugosc";
+    static final String EXTRA_MESSAGE_SZ = "com.example.damian.astronomiapam.MessegeSzerokosc";
     EditText SetDlugosc;
     EditText SetSzerokosc;
 
