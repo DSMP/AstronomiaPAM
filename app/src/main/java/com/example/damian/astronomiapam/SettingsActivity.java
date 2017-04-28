@@ -18,6 +18,8 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         SetDlugosc = (EditText) findViewById(R.id.setDlugosc);
         SetSzerokosc = (EditText) findViewById(R.id.setSzerokosc);
+        SetDlugosc.setText("51.760815");
+        SetSzerokosc.setText("19.432903");
     }
 
 

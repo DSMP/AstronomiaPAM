@@ -16,8 +16,8 @@ import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_SZ
 public class MainActivity extends FragmentActivity {
 
 
-    double dlugosc = 0;
-    double szerokosc = 0;
+    public double dlugosc = 0;
+    public double szerokosc = 0;
     /**
      * The number of pages (wizard steps) to show in this demo.
      */
@@ -72,9 +72,18 @@ public class MainActivity extends FragmentActivity {
 
         @Override
         public Fragment getItem(int position) {
+            Fragment fragment;
+            Bundle bundle = new Bundle();
+            bundle.putDouble("dlugosc", dlugosc);
+            bundle.putDouble("szerokosc", szerokosc);
             if (position == 0)
-                return new SunFragment();
-            else return new MoonFragment();
+                fragment = new SunFragment();
+            else
+            {
+                fragment = new MoonFragment();
+            }
+            fragment.setArguments(bundle);
+            return fragment;
         }
 
         @Override
