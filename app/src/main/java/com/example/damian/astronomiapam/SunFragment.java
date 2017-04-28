@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.astrocalculator.AstroCalculator;
 import com.astrocalculator.AstroDateTime;
 
+import java.lang.reflect.Array;
 import java.util.Date;
 
 
@@ -38,8 +39,8 @@ public class SunFragment extends Fragment {
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
         AstroDateTime AstroDT = new AstroDateTime(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.HOUR),cal.get(Calendar.MINUTE),cal.get(Calendar.SECOND),1,false);
-//        AstroDateTime AstroDT = new AstroDateTime(date.getYear(),date.getMonth(),date.getDay(),date.getHours(),date.getMinutes(), date.getSeconds(),date.getTimezoneOffset(),false);
-        AstroCalculator astroCalculator = new AstroCalculator(AstroDT, new AstroCalculator.Location(51.760815,19.432903));
+        Bundle bundle = new Bundle();
+        AstroCalculator astroCalculator = new AstroCalculator(AstroDT, new AstroCalculator.Location(bundle.getDouble("dlugosc"),bundle.getDouble("szerokosc")));
 
         wschTextVSun = (TextView) rootView.findViewById(R.id.wschTextVSun);
         zachTextVSun = (TextView) rootView.findViewById(R.id.zachTextVSun);
