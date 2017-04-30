@@ -77,6 +77,10 @@ public class MainActivity extends FragmentActivity {
                             public void run() {
                                 Time.setText("Czas: " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) );
                                 cycles++;
+                                if (cycles == refresh*60)
+                                {
+                                    RefreshFragments();
+                                }
                             }
                         });
                         Thread.sleep(1000);
@@ -92,6 +96,17 @@ public class MainActivity extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+    }
+
+    private void RefreshFragments() {
+        try {
+            ((ScreenSlidePagerAdapter)mPagerAdapter).MyFinalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
+        mPager.setAdapter(mPagerAdapter);
+        int a = ((ScreenSlidePagerAdapter)mPager.getAdapter()).getCount();
     }
 
     @Override
@@ -144,6 +159,14 @@ public class MainActivity extends FragmentActivity {
         @Override
         public int getCount() {
             return NUM_PAGES;
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+        }
+        public void MyFinalize() throws Throwable {
+            finalize();
         }
     }
 }

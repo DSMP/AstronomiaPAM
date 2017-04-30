@@ -30,9 +30,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void StartClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra(EXTRA_MESSAGE_D, SetDlugosc.getText().toString());
-        intent.putExtra(EXTRA_MESSAGE_SZ, SetSzerokosc.getText().toString());
-        intent.putExtra(EXTRA_MESSAGE_R, SetRefresh.getText().toString());
+        intent.putExtra(EXTRA_MESSAGE_D, EmptyChecker(SetDlugosc.getText().toString(), "0"));
+        intent.putExtra(EXTRA_MESSAGE_SZ, EmptyChecker(SetSzerokosc.getText().toString(), "0"));
+        intent.putExtra(EXTRA_MESSAGE_R, EmptyChecker(SetRefresh.getText().toString(), "1"));
         startActivity(intent);
+    }
+    private String EmptyChecker(String s, String defValue)
+    {
+        return s.isEmpty() ? defValue : s;
     }
 }
