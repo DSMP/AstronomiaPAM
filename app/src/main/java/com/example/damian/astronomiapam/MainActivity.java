@@ -21,8 +21,7 @@ import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_D;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_SZ;
 
-public class MainActivity extends FragmentActivity implements Runnable{
-
+public class MainActivity extends FragmentActivity {
 
 
     public double dlugosc = 0;
@@ -48,8 +47,6 @@ public class MainActivity extends FragmentActivity implements Runnable{
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
-
-
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -90,7 +87,6 @@ public class MainActivity extends FragmentActivity implements Runnable{
         };
         t.start();
 
-        this.cycles.
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
