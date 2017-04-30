@@ -12,6 +12,8 @@
         android:id="@+id/setDlugosc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textDirection="ltr"
+        android:inputType="numberDecimal"
         android:hint="dlugosc"/>
     <TextView
         android:layout_width="wrap_content"
@@ -21,6 +23,19 @@
         android:id="@+id/setSzerokosc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textDirection="ltr"
+        android:inputType="numberDecimal"
+        android:hint="szerokosc"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Odświeżanie w minutach"/>
+    <EditText
+        android:id="@+id/setRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textDirection="ltr"
+        android:inputType="number"
         android:hint="szerokosc"/>
     <Button
         android:id="@+id/start"

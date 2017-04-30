@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.icu.util.Calendar;
 import android.icu.util.GregorianCalendar;
+import android.icu.util.TimeZone;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +39,9 @@ public class SunFragment extends Fragment {
                 R.layout.fragment_sun, container, false);
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
-        AstroDateTime AstroDT = new AstroDateTime(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.HOUR),cal.get(Calendar.MINUTE),cal.get(Calendar.SECOND),1,false);
+        TimeZone mTimeZone = cal.getTimeZone();
+        int mGMTOffset = mTimeZone.getRawOffset() / 3600000;
+        AstroDateTime AstroDT = new AstroDateTime(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH)+1,cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.HOUR),cal.get(Calendar.MINUTE),cal.get(Calendar.SECOND),mGMTOffset,false);
         Bundle bundle = new Bundle();
         AstroCalculator astroCalculator = new AstroCalculator(AstroDT, new AstroCalculator.Location(bundle.getDouble("dlugosc"),bundle.getDouble("szerokosc")));
 

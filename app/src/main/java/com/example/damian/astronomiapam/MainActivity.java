@@ -18,13 +18,16 @@ import android.widget.TextView;
 
 import static android.R.attr.action;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_D;
+import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_SZ;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements Runnable{
+
 
 
     public double dlugosc = 0;
     public double szerokosc = 0;
+    int refresh = 0;
     int cycles = 0;
 
     TextView Time;
@@ -46,6 +49,8 @@ public class MainActivity extends FragmentActivity {
      */
     private PagerAdapter mPagerAdapter;
 
+
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,10 +59,14 @@ public class MainActivity extends FragmentActivity {
         Intent SettingsIntent = getIntent();
         dlugosc = Double.parseDouble(SettingsIntent.getStringExtra(EXTRA_MESSAGE_D));
         szerokosc = Double.parseDouble(SettingsIntent.getStringExtra(EXTRA_MESSAGE_SZ));
+        refresh = Integer.parseInt(SettingsIntent.getStringExtra(EXTRA_MESSAGE_R));
 
         Time = (TextView) findViewById(R.id.Time);
         longtitude = (TextView) findViewById(R.id.Longitude);
         latitude = (TextView) findViewById(R.id.Latitude);
+
+        longtitude.setText(dlugosc + "");
+        latitude.setText(szerokosc + "");
 
         Thread t = new Thread() {
 
@@ -65,7 +74,6 @@ public class MainActivity extends FragmentActivity {
             public void run() {
                 try {
                     while (!isInterrupted()) {
-                        Thread.sleep(1000);
                         runOnUiThread(new Runnable() {
                             Calendar c = Calendar.getInstance();
                             @Override
@@ -74,12 +82,15 @@ public class MainActivity extends FragmentActivity {
                                 cycles++;
                             }
                         });
+                        Thread.sleep(1000);
                     }
                 } catch (InterruptedException e) {
                 }
             }
         };
         t.start();
+
+        this.cycles.
 
         // Instantiate a ViewPager and a PagerAdapter.
         mPager = (ViewPager) findViewById(R.id.pager);
@@ -89,6 +100,11 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onBackPressed() {
+        try {
+            finalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         super.onBackPressed();
 //        if (mPager.getCurrentItem() == 0) {
 //            // If the user is currently looking at the first step, allow the system to handle the
