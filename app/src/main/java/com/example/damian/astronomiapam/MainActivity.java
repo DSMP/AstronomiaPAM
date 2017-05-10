@@ -143,8 +143,9 @@ public class MainActivity extends FragmentActivity {
             Bundle bundle = new Bundle();
             bundle.putDouble("dlugosc", dlugosc);
             bundle.putDouble("szerokosc", szerokosc);
-            if (position == 0)
+            if (position == 0) {
                 fragment = new SunFragment();
+            }
             else
             {
                 fragment = new MoonFragment();
