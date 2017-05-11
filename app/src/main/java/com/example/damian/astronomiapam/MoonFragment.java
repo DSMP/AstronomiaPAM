@@ -48,7 +48,7 @@ public class MoonFragment extends Fragment {
         zachTextVMoon.setText("Zachod: " + astroCalculator.getMoonInfo().getMoonrise());
         NajNowTextVMoon.setText("Najblizszy now: " + astroCalculator.getMoonInfo().getNextNewMoon());
         NajPelniaTextVMoon.setText("Najblizsza pelnia: " + astroCalculator.getMoonInfo().getNextFullMoon());
-        FazaKTextVMoon.setText("Faza ksiezyca: " + String.format("%.2f", astroCalculator.getMoonInfo().getIllumination()) + "%");
+        FazaKTextVMoon.setText("Faza ksiezyca: " + String.format("%2.2f", astroCalculator.getMoonInfo().getIllumination()*100) + "%");
         DzienMieSynodTextVMoon.setText("Dzien miesiaca Synodycznego: " + (Math.abs(astroCalculator.getMoonInfo().getNextNewMoon().getDay() - cal.get(Calendar.DAY_OF_MONTH))));
 
         return rootView;

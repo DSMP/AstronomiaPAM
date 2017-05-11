@@ -72,7 +72,7 @@ public class MainActivity extends FragmentActivity {
                             Calendar c = Calendar.getInstance();
                             @Override
                             public void run() {
-                                Time.setText("Czas: " + c.get(Calendar.HOUR) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) );
+                                Time.setText("Czas: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) );
                                 cycles++;
                                 if (cycles == refresh*60)
                                 {
