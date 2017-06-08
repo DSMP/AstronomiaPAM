@@ -129,34 +129,42 @@ public class WeatherFragment extends Fragment implements WeatherServiceListener,
         conditionTextView = (TextView) rootView.findViewById(R.id.conditionTextView);
         locationTextView = (TextView) rootView.findViewById(R.id.locationTextView);
         // Inflate the layout for this fragment
+
+        Bundle bundle = new Bundle();
+        double a = bundle.getDouble("szerokosc");
+        locationTextView.setText(bundle.getString("lokacja"));
+
+
+        getWeatherFromCurrentLocation();
         return rootView;
     }
     @Override
     public void onStart() {
         super.onStart();
 
-        loadingDialog = new ProgressDialog(getActivity().getApplicationContext());
-        loadingDialog.setMessage(getString(R.string.loading));
-        loadingDialog.setCancelable(false);
+//        loadingDialog = new ProgressDialog(getActivity().getApplicationContext());
+//        loadingDialog.setMessage(getString(R.string.loading));
+//        loadingDialog.setCancelable(false);
 //        loadingDialog.show();
 
         String location = null;
 
-        if (preferences.getBoolean(getString(R.string.pref_geolocation_enabled), true)) {
-            String locationCache = preferences.getString(getString(R.string.pref_cached_location), null);
-
-            if (locationCache == null) {
-                getWeatherFromCurrentLocation();
-            } else {
-                location = locationCache;
-            }
-        } else {
-            location = preferences.getString(getString(R.string.pref_manual_location), null);
-        }
-
-        if (location != null) {
-            weatherService.refreshWeather(location);
-        }
+        getWeatherFromCurrentLocation();
+//        if (preferences.getBoolean(getString(R.string.pref_geolocation_enabled), true)) {
+//            String locationCache = preferences.getString(getString(R.string.pref_cached_location), null);
+//
+//            if (locationCache == null) {
+//                getWeatherFromCurrentLocation();
+//            } else {
+//                location = locationCache;
+//            }
+//        } else {
+//            location = preferences.getString(getString(R.string.pref_manual_location), null);
+//        }
+//
+//        if (location != null) {
+//            weatherService.refreshWeather(location);
+//        }
     }
     // TODO: Rename method, update argument and hook method into UI event
 //    public void onButtonPressed(Uri uri) {

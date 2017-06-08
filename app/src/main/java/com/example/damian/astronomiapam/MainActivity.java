@@ -155,6 +155,7 @@ public class MainActivity extends FragmentActivity {
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.
      */
+
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -199,7 +200,7 @@ public class MainActivity extends FragmentActivity {
         public Fragment getItem(int position) {
             Fragment fragment;
             Bundle bundle = new Bundle();
-            bundle.putDouble("dlugosc", dlugosc);
+            bundle.putString("lokacja", lokalizacja);
             bundle.putDouble("szerokosc", szerokosc);
             if (position == 0) {
                 fragment = new WeatherFragment(); // nowe fragmenty
