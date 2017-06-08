@@ -5,42 +5,65 @@
     android:orientation="vertical"
     android:layoutDirection="rtl">
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="dlugosc"/>
     <EditText
         android:id="@+id/setDlugosc"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textDirection="ltr"
         android:inputType="numberDecimal"
         android:hint="dlugosc"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="szerokosc"/>
     <EditText
         android:id="@+id/setSzerokosc"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textDirection="ltr"
         android:inputType="numberDecimal"
         android:hint="szerokosc"/>
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Odświeżanie w minutach"/>
     <EditText
         android:id="@+id/setRefresh"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textDirection="ltr"
         android:inputType="number"
-        android:hint="szerokosc"/>
-    <Button
-        android:id="@+id/start"
-        android:layout_width="wrap_content"
+        android:hint="minuty"/>
+    <TextView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start"
-        android:onClick="StartClicked"/>
+        android:text="lokalizacja: (format: lodz, PL)"/>
+    <EditText
+        android:id="@+id/lokalizacjaEntry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textDirection="ltr"
+        android:inputType="text"
+        android:hint="lokalizacja (format: lodz, PL)" />
+    <Spinner
+        android:id="@+id/temperatureListSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        ></Spinner>
+    <Button
+        android:id="@+id/refreshButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="RefreshClicked"
+        android:text="Refresh" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="StartClicked"
+        android:text="Start" />
 </LinearLayout>

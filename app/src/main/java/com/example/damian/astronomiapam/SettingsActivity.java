@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 public class SettingsActivity extends AppCompatActivity {
     static final String EXTRA_MESSAGE_D = "com.example.damian.astronomiapam.MessegeDlugosc";
@@ -14,6 +16,9 @@ public class SettingsActivity extends AppCompatActivity {
     EditText SetDlugosc;
     EditText SetSzerokosc;
     EditText SetRefresh;
+    EditText SetLokalizacja;
+    Spinner temperatureListSpinner;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,9 +27,16 @@ public class SettingsActivity extends AppCompatActivity {
         SetDlugosc = (EditText) findViewById(R.id.setDlugosc);
         SetSzerokosc = (EditText) findViewById(R.id.setSzerokosc);
         SetRefresh = (EditText) findViewById(R.id.setRefresh);
+        SetLokalizacja = (EditText) findViewById(R.id.lokalizacjaEntry);
+        temperatureListSpinner = (Spinner) findViewById(R.id.temperatureListSpinner);
         SetDlugosc.setText("51.760815");
         SetSzerokosc.setText("19.432903");
         SetRefresh.setText("15");
+        SetLokalizacja.setText("lodz, PL");
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.temperature_units, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        temperatureListSpinner.setAdapter(adapter);
     }
 
 
@@ -39,4 +51,6 @@ public class SettingsActivity extends AppCompatActivity {
     {
         return s.isEmpty() ? defValue : s;
     }
+
+
 }
