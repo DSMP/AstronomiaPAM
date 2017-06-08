@@ -16,7 +16,9 @@ import android.widget.TextView;
 
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_D;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R;
+import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R_bool;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_SZ;
+import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_lok;
 
 public class MainActivity extends FragmentActivity {
 
@@ -25,6 +27,8 @@ public class MainActivity extends FragmentActivity {
     public double szerokosc = 0;
     int refresh = 0;
     int cycles = 0;
+    String lokalizacja;
+    boolean isRefreshed = false;
 
     TextView Time;
     TextView longtitude;
@@ -33,17 +37,20 @@ public class MainActivity extends FragmentActivity {
      * The number of pages (wizard steps) to show in this demo.
      */
     private static final int NUM_PAGES = 2;
+    private static final int NUM_PAGES_WHEATHER = 2;
 
     /**
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
     private ViewPager mPager;
+    private ViewPager mPagerWheather;
 
     /**
      * The pager adapter, which provides the pages to the view pager widget.
      */
     private PagerAdapter mPagerAdapter;
+    private PagerAdapter mPagerAdapterWheather;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -54,6 +61,8 @@ public class MainActivity extends FragmentActivity {
         dlugosc = Double.parseDouble(SettingsIntent.getStringExtra(EXTRA_MESSAGE_D));
         szerokosc = Double.parseDouble(SettingsIntent.getStringExtra(EXTRA_MESSAGE_SZ));
         refresh = Integer.parseInt(SettingsIntent.getStringExtra(EXTRA_MESSAGE_R));
+        lokalizacja = SettingsIntent.getStringExtra(EXTRA_MESSAGE_lok);
+        isRefreshed = SettingsIntent.getBooleanExtra(EXTRA_MESSAGE_R_bool, false);
 
         Time = (TextView) findViewById(R.id.Time);
         longtitude = (TextView) findViewById(R.id.Longitude);
@@ -74,7 +83,7 @@ public class MainActivity extends FragmentActivity {
                             public void run() {
                                 Time.setText("Czas: " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND) );
                                 cycles++;
-                                if (cycles == refresh*60)
+                                if (cycles == refresh*60 || isRefreshed)
                                 {
                                     RefreshFragments();
                                 }
@@ -93,6 +102,11 @@ public class MainActivity extends FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pager);
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+
+        mPagerWheather = (ViewPager) findViewById(R.id.wheatherPager);
+        mPagerAdapterWheather = new ScreenSlideWheatherPagerAdapter(getSupportFragmentManager());
+        mPagerWheather.setAdapter(mPagerAdapterWheather);
+
     }
 
     private void RefreshFragments() {
@@ -104,6 +118,15 @@ public class MainActivity extends FragmentActivity {
         mPagerAdapter = new ScreenSlidePagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
         int a = ((ScreenSlidePagerAdapter)mPager.getAdapter()).getCount();
+
+
+        try {
+            ((ScreenSlideWheatherPagerAdapter)mPagerAdapterWheather).MyFinalize();
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
+        mPagerAdapterWheather = new ScreenSlideWheatherPagerAdapter(getSupportFragmentManager());
+        mPagerWheather.setAdapter(mPagerAdapterWheather);
     }
 
     @Override
@@ -157,6 +180,41 @@ public class MainActivity extends FragmentActivity {
         @Override
         public int getCount() {
             return NUM_PAGES;
+        }
+
+        @Override
+        protected void finalize() throws Throwable {
+            super.finalize();
+        }
+        public void MyFinalize() throws Throwable {
+            finalize();
+        }
+    }
+    private class ScreenSlideWheatherPagerAdapter extends FragmentStatePagerAdapter {
+        public ScreenSlideWheatherPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            Fragment fragment;
+            Bundle bundle = new Bundle();
+            bundle.putDouble("dlugosc", dlugosc);
+            bundle.putDouble("szerokosc", szerokosc);
+            if (position == 0) {
+                fragment = new SunFragment(); // nowe fragmenty
+            }
+            else
+            {
+                fragment = new MoonFragment();
+            }
+            fragment.setArguments(bundle);
+            return fragment;
+        }
+
+        @Override
+        public int getCount() {
+            return NUM_PAGES_WHEATHER;
         }
 
         @Override
