@@ -13,11 +13,14 @@ public class SettingsActivity extends AppCompatActivity {
     static final String EXTRA_MESSAGE_D = "com.example.damian.astronomiapam.MessegeDlugosc";
     static final String EXTRA_MESSAGE_SZ = "com.example.damian.astronomiapam.MessegeSzerokosc";
     static final String EXTRA_MESSAGE_R = "com.example.damian.astronomiapam.MessegeRefresh";
+    static final String EXTRA_MESSAGE_lok = "com.example.damian.astronomiapam.lokalizacja";
+    static final String EXTRA_MESSAGE_R_bool = "com.example.damian.astronomiapam.refreshed";
     EditText SetDlugosc;
     EditText SetSzerokosc;
     EditText SetRefresh;
     EditText SetLokalizacja;
     Spinner temperatureListSpinner;
+    boolean refreshed = false;
 
 
     @Override
@@ -45,6 +48,8 @@ public class SettingsActivity extends AppCompatActivity {
         intent.putExtra(EXTRA_MESSAGE_D, EmptyChecker(SetDlugosc.getText().toString(), "0"));
         intent.putExtra(EXTRA_MESSAGE_SZ, EmptyChecker(SetSzerokosc.getText().toString(), "0"));
         intent.putExtra(EXTRA_MESSAGE_R, EmptyChecker(SetRefresh.getText().toString(), "1"));
+        intent.putExtra(EXTRA_MESSAGE_lok, EmptyChecker(SetLokalizacja.getText().toString(),"city, XY"));
+        intent.putExtra(EXTRA_MESSAGE_R_bool, refreshed);
         startActivity(intent);
     }
     private String EmptyChecker(String s, String defValue)
@@ -53,4 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
 
+    public void RefreshClicked(View view) {
+        refreshed = true;
+    }
 }
