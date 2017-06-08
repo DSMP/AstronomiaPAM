@@ -202,7 +202,7 @@ public class MainActivity extends FragmentActivity {
             bundle.putDouble("dlugosc", dlugosc);
             bundle.putDouble("szerokosc", szerokosc);
             if (position == 0) {
-                fragment = new SunFragment(); // nowe fragmenty
+                fragment = new WeatherFragment(); // nowe fragmenty
             }
             else
             {
