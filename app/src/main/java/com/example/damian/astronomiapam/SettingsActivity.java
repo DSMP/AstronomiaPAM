@@ -1,6 +1,8 @@
 package com.example.damian.astronomiapam;
 
+import android.content.EntityIterator;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,6 +11,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import com.example.damian.astronomiapam.database.EntityAdapter;
+import com.example.damian.astronomiapam.database.FavouriteEntity;
+import com.example.damian.astronomiapam.database.SQLiteAdapter;
+import com.example.damian.astronomiapam.listener.DBSpinnerListener;
+
+import java.util.ArrayList;
 
 public class SettingsActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     static final String EXTRA_MESSAGE_D = "com.example.damian.astronomiapam.MessegeDlugosc";
@@ -24,6 +33,11 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     Spinner temperatureListSpinner;
     boolean refreshed = false;
     String temperatureSelected;
+    Spinner FavouriteListSpinner;
+    SQLiteAdapter sqLiteAdapter;
+    ArrayList<String> favouriteEntities;
+    Cursor cursor;
+    private DBSpinnerListener dbListener;
 
 
     @Override
@@ -35,10 +49,21 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         SetRefresh = (EditText) findViewById(R.id.setRefresh);
         SetLokalizacja = (EditText) findViewById(R.id.lokalizacjaEntry);
         temperatureListSpinner = (Spinner) findViewById(R.id.temperatureListSpinner);
+        FavouriteListSpinner = (Spinner) findViewById(R.id.FavouriteListSpinner);
         SetDlugosc.setText("51.760815");
         SetSzerokosc.setText("19.432903");
         SetRefresh.setText("15");
         SetLokalizacja.setText("lodz, PL");
+
+
+        sqLiteAdapter = new SQLiteAdapter(getApplicationContext());
+        sqLiteAdapter.open();
+        favouriteEntities = (ArrayList<String>) sqLiteAdapter.printDB();
+
+
+        FavouriteListSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,favouriteEntities));
+        dbListener = new DBSpinnerListener();
+        FavouriteListSpinner.setOnItemSelectedListener(dbListener);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.temperature_units, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

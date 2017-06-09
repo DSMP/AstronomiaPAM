@@ -33,6 +33,8 @@ import com.example.damian.astronomiapam.data.Condition;
 import com.example.damian.astronomiapam.data.LocationResult;
 import com.example.damian.astronomiapam.data.Units;
 import com.example.damian.astronomiapam.data.Wind;
+import com.example.damian.astronomiapam.database.FavouriteEntity;
+import com.example.damian.astronomiapam.database.SQLiteAdapter;
 import com.example.damian.astronomiapam.listener.GeocodingServiceListener;
 import com.example.damian.astronomiapam.listener.WeatherServiceListener;
 import com.example.damian.astronomiapam.service.GoogleMapsGeocodingService;
@@ -92,6 +94,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
 
     WeatherFragment weatherFragment;
     private WeatherWindFragment weatherWindFragment;
+    private String YahooLocation;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -303,6 +306,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
     @Override
     public void serviceSuccess(Channel channel) {
         loadingDialog.hide();
+        YahooLocation = channel.getLocation();
 
         Condition condition = channel.getItem().getCondition();
         Units units = channel.getUnits();
@@ -369,6 +373,11 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
     public void geocodeFailure(Exception exception) {
         // GeoCoding failed, try loading weather data from the cache
         cacheService.load(this);
+    }
+
+    public void saveTofavourite(View view) {
+        SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getApplicationContext());
+        sqLiteAdapter.insert(new FavouriteEntity(0,YahooLocation));
     }
 
     /**

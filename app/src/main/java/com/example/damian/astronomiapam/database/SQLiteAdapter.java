@@ -26,12 +26,6 @@ public class SQLiteAdapter {
     public static final String KEY_OPTIONS = "TEXT NOT NULL";
     public static final String KEY_CITY = "City";
 
-    public static final String KEY_COUNTRY = "Country";
-
-    public static final String KEY_LAT = "Latitude";
-
-    public static final String KEY_LONG = "Longtitude";
-
 
     private SQLiteDatabase db;
     private Context context;
@@ -40,9 +34,7 @@ public class SQLiteAdapter {
     private static final String DB_CREATE_TABLE =
             "CREATE TABLE " + DB_TABLE + "( " +
                     KEY_ID + " " + ID_OPTIONS + ", " +
-                    KEY_CITY + " " + KEY_OPTIONS + ", " +
-                    KEY_COUNTRY + " " + KEY_OPTIONS + ", " +
-                    KEY_LAT + " " + KEY_OPTIONS + ", " + KEY_LONG + " " + KEY_OPTIONS +
+                    KEY_CITY + " " + KEY_OPTIONS +
                     ");";
     private static final String DROP_TABLE =
             "DROP TABLE IF EXISTS " + DB_TABLE;
@@ -95,9 +87,6 @@ public class SQLiteAdapter {
     public long insert(FavouriteEntity entity) {
         ContentValues newValues = new ContentValues();
         newValues.put(KEY_CITY, entity.getCity());
-        newValues.put(KEY_COUNTRY, entity.getCountry());
-        newValues.put(KEY_LAT, entity.getLatitude());
-        newValues.put(KEY_LONG, entity.getLongtitude());
         return db.insert(DB_TABLE, null, newValues);
     }
 
