@@ -314,8 +314,8 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
             Condition currentCondition = forecast[day];
 
             int viewId = getResources().getIdentifier("forecast_" + day, "id", getPackageName());
-            WeatherConditionFragment fragment = (WeatherConditionFragment) getSupportFragmentManager().findFragmentById(viewId);
-
+//            WeatherConditionFragment fragment = (WeatherConditionFragment) getSupportFragmentManager().findFragmentById(viewId);
+            WeatherConditionFragment fragment = (WeatherConditionFragment) weatherFragment.getChildFragmentManager().findFragmentById(viewId);
             if (fragment != null) {
                 fragment.loadForecast(currentCondition, channel.getUnits());
             }
