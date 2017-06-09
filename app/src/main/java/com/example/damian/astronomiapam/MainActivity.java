@@ -1,9 +1,20 @@
 package com.example.damian.astronomiapam;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.icu.util.Calendar;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -11,16 +22,33 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.damian.astronomiapam.data.Channel;
+import com.example.damian.astronomiapam.data.Condition;
+import com.example.damian.astronomiapam.data.LocationResult;
+import com.example.damian.astronomiapam.data.Units;
+import com.example.damian.astronomiapam.listener.GeocodingServiceListener;
+import com.example.damian.astronomiapam.listener.WeatherServiceListener;
+import com.example.damian.astronomiapam.service.GoogleMapsGeocodingService;
+import com.example.damian.astronomiapam.service.WeatherCacheService;
+import com.example.damian.astronomiapam.service.YahooWeatherService;
+
+import static com.example.damian.astronomiapam.R.id.conditionTextView;
+import static com.example.damian.astronomiapam.R.id.locationTextView;
+import static com.example.damian.astronomiapam.R.id.temperatureTextView;
+import static com.example.damian.astronomiapam.R.id.weatherIconImageView;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_D;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R_bool;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_SZ;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_lok;
+import static com.example.damian.astronomiapam.WeatherFragment.GET_WEATHER_FROM_CURRENT_LOCATION;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements WeatherServiceListener, GeocodingServiceListener, LocationListener {
 
 
     public double dlugosc = 0;
@@ -52,6 +80,14 @@ public class MainActivity extends FragmentActivity {
     private PagerAdapter mPagerAdapter;
     private PagerAdapter mPagerAdapterWheather;
 
+    private YahooWeatherService weatherService;
+    private GoogleMapsGeocodingService geocodingService;
+    private WeatherCacheService cacheService;
+    private ProgressDialog loadingDialog;
+    private boolean weatherServicesHasFailed = false;
+
+    WeatherFragment weatherFragment;
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +106,12 @@ public class MainActivity extends FragmentActivity {
 
         longtitude.setText(dlugosc + "");
         latitude.setText(szerokosc + "");
+
+        weatherService = new YahooWeatherService(this);
+        weatherService.setTemperatureUnit("c");
+
+        geocodingService = new GoogleMapsGeocodingService(this);
+        cacheService = new WeatherCacheService(this);
 
         Thread t = new Thread() {
 
@@ -107,6 +149,33 @@ public class MainActivity extends FragmentActivity {
         mPagerAdapterWheather = new ScreenSlideWheatherPagerAdapter(getSupportFragmentManager());
         mPagerWheather.setAdapter(mPagerAdapterWheather);
 
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        loadingDialog = new ProgressDialog(this);
+        loadingDialog.setMessage(getString(R.string.loading));
+        loadingDialog.setCancelable(false);
+        loadingDialog.show();
+
+        String location = null;
+
+//        if (false) {
+//            String locationCache = preferences.getString(getString(R.string.pref_cached_location), null);
+//
+//            if (locationCache == null) {
+//                getWeatherFromCurrentLocation();
+//            } else {
+//                location = locationCache;
+//            }
+//        } else {
+//        }
+
+        location = lokalizacja;
+        if (location != null) {
+            weatherService.refreshWeather(location);
+        }
     }
 
     private void RefreshFragments() {
@@ -149,6 +218,142 @@ public class MainActivity extends FragmentActivity {
 
     public void SettingsClicked(View view) {
         this.onBackPressed();
+    }
+
+
+    private void getWeatherFromCurrentLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+            }, GET_WEATHER_FROM_CURRENT_LOCATION);
+
+            return;
+        }
+
+        // system's LocationManager
+        final LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+        Criteria locationCriteria = new Criteria();
+
+        if (isNetworkEnabled) {
+            locationCriteria.setAccuracy(Criteria.ACCURACY_COARSE);
+        } else if (isGPSEnabled) {
+            locationCriteria.setAccuracy(Criteria.ACCURACY_FINE);
+        }
+
+        locationManager.requestSingleUpdate(locationCriteria, this, null);
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == GET_WEATHER_FROM_CURRENT_LOCATION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getWeatherFromCurrentLocation();
+            } else {
+                loadingDialog.hide();
+
+                AlertDialog messageDialog = new AlertDialog.Builder(this)
+                        .setMessage(getString(R.string.location_permission_needed)).create();
+//                        .setPositiveButton(getString(R.string.disable_geolocation), new DialogInterface.OnClickListener() {
+//                            @Override
+//                            public void onClick(DialogInterface dialogInterface, int i) {
+//                                startSettingsActivity();
+//                            }
+//                        })
+//                        .create();
+
+                messageDialog.show();
+            }
+        }
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        geocodingService.refreshLocation(location);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    @Override
+    public void serviceSuccess(Channel channel) {
+        loadingDialog.hide();
+
+        Condition condition = channel.getItem().getCondition();
+        Units units = channel.getUnits();
+        Condition[] forecast = channel.getItem().getForecast();
+
+        int weatherIconImageResource = getResources().getIdentifier("icon_" + condition.getCode(), "drawable", getPackageName());
+
+//        weatherIconImageView.setImageResource(weatherIconImageResource);
+//        temperatureTextView.setText(getString(R.string.temperature_output, condition.getTemperature(), units.getTemperature()));
+//        conditionTextView.setText(condition.getDescription());
+//        locationTextView.setText(channel.getLocation());
+        String temperature = getString(R.string.temperature_output, condition.getTemperature(), units.getTemperature());
+//        int weather = getResources().getIdentifier(weatherFragment.getId()+"","id",getPackageName());
+        weatherFragment.loadForecast(weatherIconImageResource, temperature, condition.getDescription(), channel.getLocation());
+
+        for (int day = 0; day < forecast.length; day++) {
+            if (day >= 5) {
+                break;
+            }
+
+            Condition currentCondition = forecast[day];
+
+            int viewId = getResources().getIdentifier("forecast_" + day, "id", getPackageName());
+            WeatherConditionFragment fragment = (WeatherConditionFragment) getSupportFragmentManager().findFragmentById(viewId);
+
+            if (fragment != null) {
+                fragment.loadForecast(currentCondition, channel.getUnits());
+            }
+        }
+
+        cacheService.save(channel);
+    }
+
+    @Override
+    public void serviceFailure(Exception exception) {
+        // display error if this is the second failure
+        if (weatherServicesHasFailed) {
+            loadingDialog.hide();
+            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+        } else {
+            // error doing reverse geocoding, load weather data from cache
+            weatherServicesHasFailed = true;
+            // OPTIONAL: let the user know an error has occurred then fallback to the cached data
+            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+
+            cacheService.load(this);
+        }
+    }
+
+    @Override
+    public void geocodeSuccess(LocationResult location) {
+        // completed geocoding successfully
+        weatherService.refreshWeather(location.getAddress());
+
+//        SharedPreferences.Editor editor = preferences.edit();
+//        editor.putString(getString(R.string.pref_cached_location), location.getAddress());
+//        editor.apply();
+    }
+
+    @Override
+    public void geocodeFailure(Exception exception) {
+        // GeoCoding failed, try loading weather data from the cache
+        cacheService.load(this);
     }
 
     /**
@@ -200,10 +405,11 @@ public class MainActivity extends FragmentActivity {
         public Fragment getItem(int position) {
             Fragment fragment;
             Bundle bundle = new Bundle();
-            bundle.putString("lokacja", lokalizacja);
-            bundle.putDouble("szerokosc", szerokosc);
+//            bundle.putString("lokacja", lokalizacja);
+//            bundle.putDouble("szerokosc", szerokosc);
             if (position == 0) {
                 fragment = new WeatherFragment(); // nowe fragmenty
+                weatherFragment = (WeatherFragment) fragment;
             }
             else
             {

@@ -31,6 +31,11 @@ import com.example.damian.astronomiapam.service.GoogleMapsGeocodingService;
 import com.example.damian.astronomiapam.service.WeatherCacheService;
 import com.example.damian.astronomiapam.service.YahooWeatherService;
 
+import static com.example.damian.astronomiapam.R.id.conditionTextView;
+import static com.example.damian.astronomiapam.R.id.locationTextView;
+import static com.example.damian.astronomiapam.R.id.temperatureTextView;
+import static com.example.damian.astronomiapam.R.id.weatherIconImageView;
+
 
 ///**
 // * A simple {@link Fragment} subclass.
@@ -79,9 +84,15 @@ public class WeatherFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Bundle bundle = new Bundle();
-        double a = bundle.getDouble("szerokosc");
-        locationTextView.setText(bundle.getString("lokacja"));
+
+    }
+
+    public void loadForecast(int weatherIcon, String temperature, String conditionDesc, String location)
+    {
+        weatherIconImageView.setImageResource(weatherIcon);
+        temperatureTextView.setText(temperature);
+        conditionTextView.setText(conditionDesc);
+        locationTextView.setText(location);
     }
 
 }

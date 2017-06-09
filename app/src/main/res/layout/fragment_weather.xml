@@ -51,8 +51,8 @@
         android:layout_below="@+id/locationTextView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="34dp"
-        android:baselineAligned="false">
-        <!--android:layout_above="@+id/imageView"-->
+        android:baselineAligned="false"
+        android:layout_above="@+id/imageView">
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"
