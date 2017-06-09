@@ -377,7 +377,9 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
 
     public void saveTofavourite(View view) {
         SQLiteAdapter sqLiteAdapter = new SQLiteAdapter(getApplicationContext());
+        sqLiteAdapter.open();
         sqLiteAdapter.insert(new FavouriteEntity(0,YahooLocation));
+        sqLiteAdapter.close();
     }
 
     /**

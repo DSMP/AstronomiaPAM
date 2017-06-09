@@ -64,6 +64,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         FavouriteListSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,favouriteEntities));
         dbListener = new DBSpinnerListener();
         FavouriteListSpinner.setOnItemSelectedListener(dbListener);
+        sqLiteAdapter.close();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.temperature_units, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

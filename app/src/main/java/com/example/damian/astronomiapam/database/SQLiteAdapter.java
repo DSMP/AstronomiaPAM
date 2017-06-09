@@ -40,6 +40,7 @@ public class SQLiteAdapter {
             "DROP TABLE IF EXISTS " + DB_TABLE;
 
 
+
     private static class DatabaseHelper extends SQLiteOpenHelper {
 
         public DatabaseHelper(Context context, String name,
