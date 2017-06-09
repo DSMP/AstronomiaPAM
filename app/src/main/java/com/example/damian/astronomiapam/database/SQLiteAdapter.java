@@ -101,7 +101,7 @@ public class SQLiteAdapter {
                 String input = "";
 
                 for (String name : columnNames) {if(!name.equals("_id"))
-                    input += String.format("%s: %s ", name,
+                    input += String.format("%s",
                             allRows.getString(allRows.getColumnIndex(name)));
                 }
                 elements.add(input);
@@ -123,5 +123,10 @@ public class SQLiteAdapter {
 
         Log.d("TABLE", tableString);*/
         return elements;
+    }
+
+    public boolean deleteItem(String city) {
+        String where = KEY_CITY + "='" + city + "'";
+        return db.delete(DB_TABLE, where, null) > 0;
     }
 }

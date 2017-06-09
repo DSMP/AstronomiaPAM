@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.damian.astronomiapam.database.EntityAdapter;
 import com.example.damian.astronomiapam.database.FavouriteEntity;
@@ -38,6 +39,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     ArrayList<String> favouriteEntities;
     Cursor cursor;
     private DBSpinnerListener dbListener;
+    private int entityPosition = 0;
 
 
     @Override
@@ -114,6 +116,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         }
         else if (parent.getId() == R.id.FavouriteListSpinner)
         {
+            entityPosition = position;
             SetLokalizacja.setText(favouriteEntities.get(position));
         }
     }
@@ -121,5 +124,20 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
+    }
+
+    public void favouriteRemove(View view) {
+        if (favouriteEntities.size()>0) {
+            sqLiteAdapter.open();
+            if (!sqLiteAdapter.deleteItem(favouriteEntities.get(entityPosition))) {
+                Toast.makeText(this, "nie udalo sie usunąć", Toast.LENGTH_SHORT).show();
+            } else
+            {
+                ((ArrayAdapter<String>)FavouriteListSpinner.getAdapter()).clear();
+                favouriteEntities = (ArrayList<String>) sqLiteAdapter.printDB();
+                ((ArrayAdapter<String>)FavouriteListSpinner.getAdapter()).notifyDataSetChanged();
+            }
+            sqLiteAdapter.close();
+        }
     }
 }
