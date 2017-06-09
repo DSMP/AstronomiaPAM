@@ -43,6 +43,7 @@ import static com.example.damian.astronomiapam.R.id.conditionTextView;
 import static com.example.damian.astronomiapam.R.id.locationTextView;
 import static com.example.damian.astronomiapam.R.id.temperatureTextView;
 import static com.example.damian.astronomiapam.R.id.weatherIconImageView;
+import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_CF;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_D;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R;
 import static com.example.damian.astronomiapam.SettingsActivity.EXTRA_MESSAGE_R_bool;
@@ -59,6 +60,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
     int cycles = 0;
     String lokalizacja;
     boolean isRefreshed = false;
+    String temperatureSelected;
 
     TextView Time;
     TextView longtitude;
@@ -102,6 +104,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         refresh = Integer.parseInt(SettingsIntent.getStringExtra(EXTRA_MESSAGE_R));
         lokalizacja = SettingsIntent.getStringExtra(EXTRA_MESSAGE_lok);
         isRefreshed = SettingsIntent.getBooleanExtra(EXTRA_MESSAGE_R_bool, false);
+        temperatureSelected = SettingsIntent.getStringExtra(EXTRA_MESSAGE_CF);
 
         Time = (TextView) findViewById(R.id.Time);
         longtitude = (TextView) findViewById(R.id.Longitude);
@@ -111,7 +114,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         latitude.setText(szerokosc + "");
 
         weatherService = new YahooWeatherService(this);
-        weatherService.setTemperatureUnit("c");
+        weatherService.setTemperatureUnit(temperatureSelected);
 
         geocodingService = new GoogleMapsGeocodingService(this);
         cacheService = new WeatherCacheService(this);
@@ -131,6 +134,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
                                 if (cycles == refresh*60 || isRefreshed)
                                 {
                                     RefreshFragments();
+                                    isRefreshed = false;
                                 }
                             }
                         });
@@ -199,6 +203,11 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         }
         mPagerAdapterWheather = new ScreenSlideWheatherPagerAdapter(getSupportFragmentManager());
         mPagerWheather.setAdapter(mPagerAdapterWheather);
+        String location = null;
+        location = lokalizacja;
+        if (location != null) {
+            weatherService.refreshWeather(location);
+        }
     }
 
     @Override
