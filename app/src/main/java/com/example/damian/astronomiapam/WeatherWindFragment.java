@@ -56,7 +56,7 @@ public class WeatherWindFragment extends Fragment {
         speedTextView.setText(String.format("Wind Speed: %d", windSpeed));
         directionTextView.setText(String.format("Wind direction: %d", windDirection));
         humidityTextView.setText(String.format("humidity: %d", humidity));
-        visibilityTextView.setText(String.format("cisnienie: %.2f", visibility));
+        visibilityTextView.setText(String.format("visibility: %.2f", visibility));
     }
 
 }
