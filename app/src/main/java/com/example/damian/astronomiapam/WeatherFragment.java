@@ -54,6 +54,7 @@ public class WeatherFragment extends Fragment {
     private TextView temperatureTextView;
     private TextView conditionTextView;
     private TextView locationTextView;
+    private TextView cisnienieLabel;
 
 //    private OnFragmentInteractionListener mListener;
 
@@ -78,6 +79,7 @@ public class WeatherFragment extends Fragment {
         temperatureTextView = (TextView) rootView.findViewById(R.id.temperatureTextView);
         conditionTextView = (TextView) rootView.findViewById(R.id.conditionTextView);
         locationTextView = (TextView) rootView.findViewById(R.id.locationTextView);
+        cisnienieLabel = (TextView) rootView.findViewById(R.id.cisnienieLabel);
         // Inflate the layout for this fragment
         return rootView;
     }
@@ -87,12 +89,13 @@ public class WeatherFragment extends Fragment {
 
     }
 
-    public void loadForecast(int weatherIcon, String temperature, String conditionDesc, String location)
+    public void loadForecast(int weatherIcon, String temperature, String conditionDesc, String location, Double pressure)
     {
         weatherIconImageView.setImageResource(weatherIcon);
         temperatureTextView.setText(temperature);
         conditionTextView.setText(conditionDesc);
         locationTextView.setText(location);
+        cisnienieLabel.setText(String.format("cisnienie: %.2f", pressure));
     }
 
 }

@@ -7,10 +7,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/weatherIconImageView"
-        android:layout_alignParentTop="true"
         android:src="@drawable/icon_na"
-        android:layout_centerHorizontal="true"
-        android:contentDescription="@string/condition_icon" />
+        android:contentDescription="@string/condition_icon"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,10 +19,14 @@
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="temperature"
         android:id="@+id/temperatureTextView"
-        android:layout_below="@+id/weatherIconImageView"
-        android:layout_centerHorizontal="true"
         android:textStyle="bold"
-        android:typeface="serif" />
+        android:typeface="serif"
+        android:layout_marginTop="12dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="29dp"
+        android:layout_marginEnd="29dp"
+        android:layout_alignParentTop="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -30,7 +35,8 @@
         android:text="condition"
         android:id="@+id/conditionTextView"
         android:layout_below="@+id/temperatureTextView"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignRight="@+id/locationTextView"
+        android:layout_alignEnd="@+id/locationTextView" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,26 +44,39 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="location"
         android:id="@+id/locationTextView"
+        android:textStyle="bold"
         android:layout_below="@+id/conditionTextView"
-        android:layout_centerHorizontal="true"
-        android:textStyle="bold" />
+        android:layout_alignRight="@+id/temperatureTextView"
+        android:layout_alignEnd="@+id/temperatureTextView"
+        android:layout_marginRight="38dp"
+        android:layout_marginEnd="38dp" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="cisnienie"
+        android:id="@+id/cisnienieLabel"
+        android:layout_below="@+id/locationTextView"
+        android:layout_alignRight="@+id/conditionTextView"
+        android:layout_alignEnd="@+id/conditionTextView" />
 
     <LinearLayout
         android:id="@+id/forecastContainer"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="177dp"
-        android:layout_below="@+id/locationTextView"
+        android:layout_below="@+id/weatherIconImageView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="34dp"
         android:baselineAligned="false">
+
         <fragment
+            android:id="@+id/forecast_0"
+            android:name="com.example.damian.astronomiapam.WeatherConditionFragment"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:name="com.example.damian.astronomiapam.WeatherConditionFragment"
-            android:id="@+id/forecast_0"
             android:layout_weight="1"
             tools:layout="@layout/fragment_weather_condition" />
+
         <fragment
             android:layout_width="0dp"
             android:layout_height="wrap_content"

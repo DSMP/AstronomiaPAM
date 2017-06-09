@@ -27,10 +27,12 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.damian.astronomiapam.data.Atmosphere;
 import com.example.damian.astronomiapam.data.Channel;
 import com.example.damian.astronomiapam.data.Condition;
 import com.example.damian.astronomiapam.data.LocationResult;
 import com.example.damian.astronomiapam.data.Units;
+import com.example.damian.astronomiapam.data.Wind;
 import com.example.damian.astronomiapam.listener.GeocodingServiceListener;
 import com.example.damian.astronomiapam.listener.WeatherServiceListener;
 import com.example.damian.astronomiapam.service.GoogleMapsGeocodingService;
@@ -87,6 +89,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
     private boolean weatherServicesHasFailed = false;
 
     WeatherFragment weatherFragment;
+    private WeatherWindFragment weatherWindFragment;
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -294,6 +297,8 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
 
         Condition condition = channel.getItem().getCondition();
         Units units = channel.getUnits();
+        Wind wind = channel.getWind();
+        Atmosphere atmosphere = channel.getAtmosphere();
         Condition[] forecast = channel.getItem().getForecast();
 
         int weatherIconImageResource = getResources().getIdentifier("icon_" + condition.getCode(), "drawable", getPackageName());
@@ -304,7 +309,8 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
 //        locationTextView.setText(channel.getLocation());
         String temperature = getString(R.string.temperature_output, condition.getTemperature(), units.getTemperature());
 //        int weather = getResources().getIdentifier(weatherFragment.getId()+"","id",getPackageName());
-        weatherFragment.loadForecast(weatherIconImageResource, temperature, condition.getDescription(), channel.getLocation());
+        weatherFragment.loadForecast(weatherIconImageResource, temperature, condition.getDescription(), channel.getLocation(), atmosphere.getPressure());
+        weatherWindFragment.loadForecast(weatherIconImageResource,wind.getSpeed(), wind.getDirection(), atmosphere.getHumidity(), atmosphere.getVisibility());
 
         for (int day = 0; day < forecast.length; day++) {
             if (day >= 5) {
@@ -413,7 +419,8 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
             }
             else
             {
-                fragment = new MoonFragment();
+                fragment = new WeatherWindFragment();
+                weatherWindFragment = (WeatherWindFragment) fragment;
             }
             fragment.setArguments(bundle);
             return fragment;

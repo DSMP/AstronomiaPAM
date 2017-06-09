@@ -41,7 +41,7 @@ import java.net.URLConnection;
 public class YahooWeatherService {
     private WeatherServiceListener listener;
     private Exception error;
-    private String temperatureUnit = "C";
+    private String temperatureUnit = "c";
 
     public YahooWeatherService(WeatherServiceListener listener) {
         this.listener = listener;
