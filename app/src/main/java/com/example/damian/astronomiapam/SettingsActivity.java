@@ -63,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
         FavouriteListSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,favouriteEntities));
         dbListener = new DBSpinnerListener();
-        FavouriteListSpinner.setOnItemSelectedListener(dbListener);
+        FavouriteListSpinner.setOnItemSelectedListener(this);
         sqLiteAdapter.close();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.temperature_units, android.R.layout.simple_spinner_item);
@@ -73,6 +73,15 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        sqLiteAdapter.open();
+        favouriteEntities = (ArrayList<String>) sqLiteAdapter.printDB();
+        FavouriteListSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,favouriteEntities));
+        sqLiteAdapter.close();
+
+    }
 
     public void StartClicked(View view) {
         Intent intent = new Intent(this, MainActivity.class);
@@ -96,14 +105,17 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        if (position == 0)
-        {
-            temperatureSelected = "c";
-        }else if(position == 1)
-        {
-            temperatureSelected = "f";
+        if (parent.getId() == R.id.temperatureListSpinner) {
+            if (position == 0) {
+                temperatureSelected = "c";
+            } else if (position == 1) {
+                temperatureSelected = "f";
+            } else temperatureSelected = "c";
         }
-        else temperatureSelected = "c";
+        else if (parent.getId() == R.id.FavouriteListSpinner)
+        {
+            SetLokalizacja.setText(favouriteEntities.get(position));
+        }
     }
 
     @Override
