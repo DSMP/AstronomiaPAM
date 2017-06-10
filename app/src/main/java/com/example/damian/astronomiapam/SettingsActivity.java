@@ -135,6 +135,7 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
             {
                 ((ArrayAdapter<String>)FavouriteListSpinner.getAdapter()).clear();
                 favouriteEntities = (ArrayList<String>) sqLiteAdapter.printDB();
+                ((ArrayAdapter<String>)FavouriteListSpinner.getAdapter()).addAll(favouriteEntities);
                 ((ArrayAdapter<String>)FavouriteListSpinner.getAdapter()).notifyDataSetChanged();
             }
             sqLiteAdapter.close();
