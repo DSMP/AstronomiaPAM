@@ -138,6 +138,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
                                 {
                                     RefreshFragments();
                                     isRefreshed = false;
+                                    cycles = 0;
                                 }
                             }
                         });
