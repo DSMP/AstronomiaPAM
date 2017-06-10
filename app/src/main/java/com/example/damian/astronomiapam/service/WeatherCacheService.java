@@ -95,7 +95,7 @@ public class WeatherCacheService {
                     return channel;
 
                 } catch (FileNotFoundException e) { // cache file doesn't exist
-                    error = new CacheException(context.getString(R.string.cache_exception));
+                    error = new CacheException("brak internetu");// context.getString(R.string.cache_exception)
                 } catch (Exception e) {
                     error = e;
                 }

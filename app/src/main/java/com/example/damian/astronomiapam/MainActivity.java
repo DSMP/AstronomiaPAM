@@ -349,12 +349,12 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         // display error if this is the second failure
         if (weatherServicesHasFailed) {
             loadingDialog.hide();
-            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_LONG).show();
+            Toast.makeText(this,"brak internetu", Toast.LENGTH_LONG).show(); // exception.getMessage()
         } else {
             // error doing reverse geocoding, load weather data from cache
             weatherServicesHasFailed = true;
             // OPTIONAL: let the user know an error has occurred then fallback to the cached data
-            Toast.makeText(this, exception.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "brak danych w pliku", Toast.LENGTH_SHORT).show(); // exception.getMessage()
 
             cacheService.load(this);
         }
