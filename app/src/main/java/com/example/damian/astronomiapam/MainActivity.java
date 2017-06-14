@@ -381,6 +381,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         sqLiteAdapter.open();
         sqLiteAdapter.insert(new FavouriteEntity(0,YahooLocation));
         sqLiteAdapter.close();
+        Toast.makeText(this, "Saved current town", Toast.LENGTH_SHORT).show();
     }
 
     /**

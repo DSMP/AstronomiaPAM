@@ -23,7 +23,7 @@ public class SQLiteAdapter {
     public static final String KEY_ID = "_id";
     public static final String ID_OPTIONS = "INTEGER PRIMARY KEY AUTOINCREMENT";
 
-    public static final String KEY_OPTIONS = "TEXT NOT NULL";
+    public static final String KEY_OPTIONS = "TEXT NOT NULL UNIQUE";
     public static final String KEY_CITY = "City";
 
 
