@@ -1,8 +1,11 @@
 package com.example.damian.astronomiapam;
 
+import android.content.Context;
 import android.content.EntityIterator;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -93,11 +96,20 @@ public class SettingsActivity extends AppCompatActivity implements AdapterView.O
         intent.putExtra(EXTRA_MESSAGE_lok, EmptyChecker(SetLokalizacja.getText().toString(),"city, XY"));
         intent.putExtra(EXTRA_MESSAGE_R_bool, refreshed);
         intent.putExtra(EXTRA_MESSAGE_CF, temperatureSelected);
-        startActivity(intent);
+        if (isOnline())
+            startActivity(intent);
+        else Toast.makeText(this, "Brak Internetu", Toast.LENGTH_SHORT).show();
     }
     private String EmptyChecker(String s, String defValue)
     {
         return s.isEmpty() ? defValue : s;
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(this.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void RefreshClicked(View view) {

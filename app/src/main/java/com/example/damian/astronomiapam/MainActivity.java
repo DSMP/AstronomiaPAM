@@ -13,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Environment;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -23,6 +24,7 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,12 @@ import com.example.damian.astronomiapam.service.GoogleMapsGeocodingService;
 import com.example.damian.astronomiapam.service.WeatherCacheService;
 import com.example.damian.astronomiapam.service.YahooWeatherService;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import static com.example.damian.astronomiapam.R.id.conditionTextView;
 import static com.example.damian.astronomiapam.R.id.locationTextView;
 import static com.example.damian.astronomiapam.R.id.temperatureTextView;
@@ -56,6 +64,7 @@ import static com.example.damian.astronomiapam.WeatherFragment.GET_WEATHER_FROM_
 public class MainActivity extends FragmentActivity implements WeatherServiceListener, GeocodingServiceListener, LocationListener {
 
 
+    private static final String LOG_TAG = "FILE";
     public double dlugosc = 0;
     public double szerokosc = 0;
     int refresh = 0;
@@ -63,6 +72,8 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
     String lokalizacja;
     boolean isRefreshed = false;
     String temperatureSelected;
+    byte[] BCondition;
+    byte[] BChannel;
 
     TextView Time;
     TextView longtitude;
@@ -95,6 +106,7 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
     WeatherFragment weatherFragment;
     private WeatherWindFragment weatherWindFragment;
     private String YahooLocation;
+    private String albumName = "ChannelData";
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -159,13 +171,13 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         mPagerWheather = (ViewPager) findViewById(R.id.wheatherPager);
         mPagerAdapterWheather = new ScreenSlideWheatherPagerAdapter(getSupportFragmentManager());
         mPagerWheather.setAdapter(mPagerAdapterWheather);
+        loadingDialog = new ProgressDialog(this);
 
     }
     @Override
     protected void onStart() {
         super.onStart();
 
-        loadingDialog = new ProgressDialog(this);
         loadingDialog.setMessage(getString(R.string.loading));
         loadingDialog.setCancelable(false);
         loadingDialog.show();
@@ -315,6 +327,21 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         Atmosphere atmosphere = channel.getAtmosphere();
         Condition[] forecast = channel.getItem().getForecast();
 
+//            try {
+//                for (int i = 0; i < forecast.length; i++) {
+//                    BChannel = Channel.toByteArray(channel);
+//                    BCondition = Condition.toByteArray(forecast[i]);
+//                    FileOutputStream fos = openFileOutput("ChannelData", Context.MODE_PRIVATE);
+//                    fos.write(BChannel);
+//                    fos.close();
+//                    fos = openFileOutput("ConditionData", Context.MODE_PRIVATE);
+//                    fos.write(BCondition);
+//                    fos.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Toast.makeText(this, "Nie udalo sie zapisac danych do pliku", Toast.LENGTH_SHORT).show();
+//            }
         int weatherIconImageResource = getResources().getIdentifier("icon_" + condition.getCode(), "drawable", getPackageName());
 
 //        weatherIconImageView.setImageResource(weatherIconImageResource);
@@ -323,8 +350,14 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
 //        locationTextView.setText(channel.getLocation());
         String temperature = getString(R.string.temperature_output, condition.getTemperature(), units.getTemperature());
 //        int weather = getResources().getIdentifier(weatherFragment.getId()+"","id",getPackageName());
-        weatherFragment.loadForecast(weatherIconImageResource, temperature, condition.getDescription(), channel.getLocation(), atmosphere.getPressure());
-        weatherWindFragment.loadForecast(weatherIconImageResource,wind.getSpeed(), wind.getDirection(), atmosphere.getHumidity(), atmosphere.getVisibility());
+//        try {
+        if (weatherFragment == null)
+        {
+            RefreshFragments();
+        }
+            weatherFragment.loadForecast(weatherIconImageResource, temperature, condition.getDescription(), channel.getLocation(), atmosphere.getPressure());
+            weatherWindFragment.loadForecast(weatherIconImageResource,wind.getSpeed(), wind.getDirection(), atmosphere.getHumidity(), atmosphere.getVisibility());
+
 
         for (int day = 0; day < forecast.length; day++) {
             if (day >= 5) {
@@ -340,21 +373,38 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
                 fragment.loadForecast(currentCondition, channel.getUnits());
             }
         }
+//        }catch (NullPointerException e)
+//        {
+//
+//        }
 
         cacheService.save(channel);
     }
 
     @Override
     public void serviceFailure(Exception exception) {
-        // display error if this is the second failure
+        loadingDialog.hide();
+        loadingDialog.cancel();
         if (weatherServicesHasFailed) {
-            loadingDialog.hide();
-            Toast.makeText(this,"brak internetu", Toast.LENGTH_LONG).show(); // exception.getMessage()
+            FileInputStream fos = null;
+//            try {
+//                fos = openFileInput("ChannelData");
+//                fos.read(BChannel);
+//                fos.close();
+//                fos = openFileInput("ConditionData");
+//                fos.read(BCondition);
+//                fos.close();
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                Toast.makeText(this, "Nie udalo sie odtworzyć danych z pliku", Toast.LENGTH_SHORT).show();
+//            }
+            loadingDialog.show();
+//            Toast.makeText(this,"brak danych w pliku", Toast.LENGTH_LONG).show(); // exception.getMessage()
         } else {
-            // error doing reverse geocoding, load weather data from cache
             weatherServicesHasFailed = true;
-            // OPTIONAL: let the user know an error has occurred then fallback to the cached data
-            Toast.makeText(this, "brak danych w pliku", Toast.LENGTH_SHORT).show(); // exception.getMessage()
+            Toast.makeText(this, "brak internetu. Pobrano dane z pliku", Toast.LENGTH_SHORT).show(); // exception.getMessage()
 
             cacheService.load(this);
         }
@@ -383,7 +433,15 @@ public class MainActivity extends FragmentActivity implements WeatherServiceList
         sqLiteAdapter.close();
         Toast.makeText(this, "Saved current town", Toast.LENGTH_SHORT).show();
     }
-
+    public File getAlbumStorageDir() {
+        // Get the directory for the user's public pictures directory.
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), albumName);
+        if (!file.mkdirs()) {
+            Log.e(LOG_TAG, "Directory not created");
+        }
+        return file;
+    }
     /**
      * A simple pager adapter that represents 5 ScreenSlidePageFragment objects, in
      * sequence.

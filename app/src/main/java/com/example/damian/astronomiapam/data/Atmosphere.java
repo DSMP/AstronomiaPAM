@@ -2,6 +2,8 @@ package com.example.damian.astronomiapam.data;
 
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Created by Damian on 09.06.2017.
  */

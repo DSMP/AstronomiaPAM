@@ -65,7 +65,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="StartClicked"
-        android:text="Start" />
+        android:text="check weather forecast" />
     <Spinner
         android:id="@+id/FavouriteListSpinner"
         android:layout_width="match_parent"
